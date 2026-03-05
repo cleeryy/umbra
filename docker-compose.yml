@@ -11,7 +11,6 @@ services:
       - /etc/wireguard:/etc/wireguard:ro
     environment:
       - PORT=8080
-      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
     restart: unless-stopped
     privileged: true
     cap_add:
@@ -19,8 +18,8 @@ services:
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:

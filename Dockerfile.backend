@@ -9,21 +9,21 @@ RUN apk add --no-cache \
     bash
 
 # Copy go mod files
-COPY backend/go.mod backend/go.sum ./
+COPY go.mod go.sum ./
 RUN go mod download
 
 # Copy source code
-COPY backend/cmd/ ./cmd/
-COPY backend/internal/ ./internal/
+COPY cmd/ ./cmd/
+COPY internal/ ./internal/
 
 # Build the application
-RUN go build -o umbra-api ./cmd/api/main.go
+RUN go build -o pivpn-api ./cmd/api/main.go
 
 # Create non-root user
-RUN adduser -D -u 1000 umbra-user
-RUN chown -R umbra-user:umbra-user /app
-USER umbra-user
+RUN adduser -D -u 1000 pivpn-user
+RUN chown -R pivpn-user:pivpn-user /app
+USER pivpn-user
 
 EXPOSE 8080
 
-CMD ["./umbra-api"]
+CMD ["./pivpn-api"]
