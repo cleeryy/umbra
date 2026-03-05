@@ -160,13 +160,10 @@ func SetupRoutes(router *gin.Engine, pivpnManager *pivpn.Manager, authManager *a
 				c.JSON(http.StatusOK, gin.H{"qr_code": qrCode})
 			})
 
-			// Health check
-			protected.GET("/health", func(c *gin.Context) {
-				c.JSON(http.StatusOK, gin.H{"status": "healthy", "service": "umbra-pivpn"})
-			})
+			// Health check endpoint is now public (moved outside protected routes)
 		}
 
-		// Public health check
+		// Public health check - moved outside protected routes
 		api.GET("/health", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"status": "healthy", "service": "umbra-pivpn"})
 		})
