@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - /etc/wireguard:/etc/wireguard:ro
+    environment:
+      - PORT=8080
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+    restart: unless-stopped
+    privileged: true
+    cap_add:
+      - NET_ADMIN
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+    restart: unless-stopped
+    depends_on:
+      - backend
