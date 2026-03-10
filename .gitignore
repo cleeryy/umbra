@@ -1,2 +1,164 @@
+# =============================================================================
+# Go
+# =============================================================================
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+backend/pivpn-api
+backend/bin/
+backend/vendor/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+coverage.txt
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# =============================================================================
+# Node.js / Next.js
+# =============================================================================
+# Dependencies
+node_modules/
 frontend/node_modules/
+
+# Build outputs
+.next/
 frontend/.next/
+dist/
+build/
+out/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Package manager
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# =============================================================================
+# IDE / Editors
+# =============================================================================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+.#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# =============================================================================
+# OS Files
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.nfs*
+
+# =============================================================================
+# Docker
+# =============================================================================
+.docker/
+docker-compose.override.yml
+
+# =============================================================================
+# Logs
+# =============================================================================
+logs/
+*.log
+
+# =============================================================================
+# Testing
+# =============================================================================
+test-results/
+junit.xml
+
+# =============================================================================
+# Certificates / Secrets
+# =============================================================================
+*.pem
+*.key
+*.crt
+*.csr
+secrets/
+
+# =============================================================================
+# Temporary Files
+# =============================================================================
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
