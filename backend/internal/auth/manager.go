@@ -2,14 +2,19 @@ package auth
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Manager struct {
-	jwtSecret string
+	jwtSecret     string
+	adminUser     string
+	adminPass     string
+	adminPassHash string
 }
 
 type Claims struct {
@@ -22,24 +27,42 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func NewManager(jwtSecret string) *Manager {
-	return &Manager{
+func NewManager(jwtSecret, adminUsername, adminPassword string) *Manager {
+	m := &Manager{
 		jwtSecret: jwtSecret,
+		adminUser: adminUsername,
 	}
+
+	passHash := os.Getenv("ADMIN_PASSWORD_HASH")
+	if passHash != "" {
+		m.adminPassHash = passHash
+		logrus.Info("Using bcrypt password hash from environment")
+	} else if adminPassword != "" {
+		m.adminPass = adminPassword
+		hash, err := bcrypt.GenerateFromPassword([]byte(adminPassword), bcrypt.DefaultCost)
+		if err == nil {
+			m.adminPassHash = string(hash)
+			logrus.Warn("ADMIN_PASSWORD_HASH not set. Generated hash for security.")
+			logrus.Warn("Set ADMIN_PASSWORD_HASH in production for better security.")
+		}
+	}
+
+	return m
 }
 
-// ValidateCredentials validates user credentials
 func (m *Manager) ValidateCredentials(username, password string) bool {
-	// Default admin credentials - in production, use environment variables
-	if username == "admin" && password == "admin" {
-		return true
+	if username != m.adminUser {
+		return false
 	}
 
-	// You can add more users or integrate with a database
-	return false
+	if m.adminPassHash != "" {
+		err := bcrypt.CompareHashAndPassword([]byte(m.adminPassHash), []byte(password))
+		return err == nil
+	}
+
+	return password == m.adminPass
 }
 
-// GenerateToken creates a JWT token for authenticated users
 func (m *Manager) GenerateToken(username string) (string, error) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 
@@ -61,7 +84,6 @@ func (m *Manager) GenerateToken(username string) (string, error) {
 	return tokenString, nil
 }
 
-// ValidateToken validates a JWT token
 func (m *Manager) ValidateToken(tokenString string) (*Claims, error) {
 	claims := &Claims{}
 
@@ -80,7 +102,6 @@ func (m *Manager) ValidateToken(tokenString string) (*Claims, error) {
 	return claims, nil
 }
 
-// HashPassword hashes a password using bcrypt
 func (m *Manager) HashPassword(password string) (string, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -89,7 +110,6 @@ func (m *Manager) HashPassword(password string) (string, error) {
 	return string(hashedPassword), nil
 }
 
-// CheckPasswordHash verifies a password against a hash
 func (m *Manager) CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
